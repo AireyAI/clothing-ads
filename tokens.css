@@ -1,6 +1,68 @@
-/* Placeholder tokens — fully expanded in Task 4 after design direction is picked. */
+/* AireyAI Studio — locked design tokens (Direction B, 2026-05-14).
+   Polish tweaks tokens, not components. Anti-generic guardrails per ~/Websites/CLAUDE.md. */
+
 :root {
-  --color-primary: #FF5500;
-  --color-bg: #0A0A0A;
-  --color-text: #F5F0E6;
+  /* === Palette (8 tokens) === */
+  --ink: #0A0A0A;
+  --ink-2: #161616;
+  --ink-3: #1F1A14;
+  --paper: #F5F0E6;
+  --paper-mute: rgba(245, 240, 230, 0.55);
+  --primary: #FF5500;
+  --primary-dark: #CC4400;
+  --primary-soft: rgba(255, 85, 0, 0.22);
+
+  /* === Type scale === */
+  --fs-h1: clamp(3.5rem, 14vw, 13rem);
+  --fs-h2: clamp(2.5rem, 6vw, 4.5rem);
+  --fs-h3: clamp(1.75rem, 3vw, 2.5rem);
+  --fs-h4: clamp(1.5rem, 2.5vw, 2rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.875rem;
+  --fs-eyebrow: 0.75rem;
+
+  /* === Spacing (4px grid) === */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+  --space-11: 10rem;
+  --space-12: 14rem;
+
+  /* === Radii (Direction B prefers hard edges — used sparingly) === */
+  --radius-sm: 2px;
+  --radius-md: 6px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+
+  /* === Shadows (offset solid blocks for the brutalist CTA, soft tinted for cards) === */
+  --shadow-cta-rest: 8px 8px 0 var(--ink-2), 8px 8px 0 1px var(--paper);
+  --shadow-cta-hover: 11px 11px 0 var(--ink-2), 11px 11px 0 1px var(--paper);
+  --shadow-final-rest: 10px 10px 0 var(--paper);
+  --shadow-final-hover: 13px 13px 0 var(--paper);
+  --shadow-card-md: 0 18px 40px -16px rgba(0, 0, 0, 0.6),
+                    0 0 0 1px rgba(245, 240, 230, 0.08);
+  --shadow-glow: 0 0 24px rgba(255, 85, 0, 0.45);
+
+  /* === Typefaces === */
+  --display: 'Big Shoulders Display', 'Impact', sans-serif;
+  --sans: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* === Motion === */
+  --ease-out: cubic-bezier(0.2, 0.85, 0.2, 1);
+  --ease-spring: cubic-bezier(0.2, 0.8, 0.2, 1.2);
+  --dur-quick: 0.15s;
+  --dur-base: 0.3s;
+  --dur-slow: 0.9s;
+
+  /* === Layout === */
+  --max-content: 1400px;
+  --side-pad: max(20px, 4vw);
 }
