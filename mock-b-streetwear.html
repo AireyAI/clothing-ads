@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mock B — Raw Portfolio Studio | AireyAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0A0A0A;
+      --ink-2: #161616;
+      --paper: #F5F0E6;
+      --paper-mute: rgba(245, 240, 230, 0.55);
+      --primary: #FF5500;
+      --primary-soft: rgba(255, 85, 0, 0.22);
+      --display: 'Big Shoulders Display', 'Impact', sans-serif;
+      --sans: 'Inter Tight', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--sans);
+      line-height: 1.5;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Grid overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(245, 240, 230, 0.04) 1px, transparent 1px);
+      background-size: calc(100vw / 12) 100%;
+    }
+    /* Grain */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 2; pointer-events: none;
+      opacity: 0.08; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Marquee bar */
+    .marquee {
+      position: relative; z-index: 5;
+      background: var(--primary); color: var(--ink);
+      padding: 12px 0;
+      overflow: hidden;
+      border-bottom: 1px solid var(--ink);
+    }
+    .marquee-track {
+      display: flex; gap: 60px;
+      animation: scroll 30s linear infinite;
+      white-space: nowrap;
+      font-family: var(--mono); font-weight: 700;
+      font-size: 0.875rem; text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+    .marquee-track span { display: inline-flex; align-items: center; gap: 60px; }
+    .marquee-track span::after {
+      content: '●'; color: var(--ink);
+    }
+    @keyframes scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* Nav */
+    nav {
+      position: relative; z-index: 5;
+      padding: 24px max(20px, 4vw);
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid rgba(245, 240, 230, 0.1);
+    }
+    .logo-mark {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--mono); font-weight: 700;
+      font-size: 0.875rem; text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+    .logo-mark::before {
+      content: ''; width: 14px; height: 14px;
+      background: var(--primary);
+      transform: rotate(45deg);
+    }
+    .nav-cta {
+      font-family: var(--mono); font-weight: 700;
+      font-size: 0.75rem; text-transform: uppercase;
+      letter-spacing: 0.2em;
+      padding: 10px 18px;
+      border: 2px solid var(--paper);
+      color: var(--paper);
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-cta:hover { background: var(--paper); color: var(--ink); }
+
+    /* Hero block — broken grid */
+    .hero {
+      position: relative; z-index: 4;
+      padding: clamp(40px, 5vw, 80px) max(20px, 4vw);
+    }
+
+    /* Status row */
+    .status {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center; gap: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(245, 240, 230, 0.1);
+      margin-bottom: clamp(32px, 6vw, 64px);
+      font-family: var(--mono); font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.18em;
+      color: var(--paper-mute);
+    }
+    .status-dot {
+      display: inline-flex; align-items: center; gap: 10px;
+      color: var(--paper);
+    }
+    .status-dot::before {
+      content: ''; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 12px var(--primary);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .status-coords {
+      font-feature-settings: 'tnum';
+      text-align: center;
+    }
+    .status-issue {
+      text-align: right;
+    }
+    .status-issue strong { color: var(--paper); font-weight: 700; }
+
+    /* The headline beast */
+    .display {
+      font-family: var(--display);
+      font-weight: 900;
+      line-height: 0.82;
+      letter-spacing: -0.025em;
+      text-transform: uppercase;
+      margin-bottom: clamp(32px, 5vw, 56px);
+    }
+    .display .row {
+      display: flex; align-items: flex-end;
+      gap: clamp(16px, 3vw, 40px);
+      flex-wrap: wrap;
+    }
+    .display .row + .row { margin-top: clamp(4px, 0.8vw, 12px); }
+    .word {
+      font-size: clamp(4rem, 14vw, 13rem);
+      display: inline-block;
+    }
+    .word.outline {
+      color: transparent;
+      -webkit-text-stroke: 2px var(--paper);
+      text-stroke: 2px var(--paper);
+    }
+    .word.fill { color: var(--paper); }
+    .word.fire {
+      color: var(--primary);
+      font-style: italic;
+      transform: skewX(-6deg);
+    }
+    .pill-inline {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--mono); font-weight: 500;
+      font-size: clamp(0.75rem, 1vw, 0.875rem);
+      text-transform: uppercase; letter-spacing: 0.18em;
+      color: var(--paper-mute);
+      padding: 10px 18px;
+      border: 1px solid rgba(245, 240, 230, 0.2);
+      border-radius: 999px;
+      align-self: center;
+      transform: translateY(-0.5em);
+    }
+    .pill-inline::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--primary);
+    }
+
+    /* Three column: lede / work tiles */
+    .grid-row {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: clamp(24px, 4vw, 64px);
+      align-items: stretch;
+    }
+    @media (max-width: 900px) {
+      .grid-row { grid-template-columns: 1fr; }
+    }
+
+    /* Lede column */
+    .lede {
+      display: flex; flex-direction: column;
+      justify-content: space-between;
+      gap: 32px;
+    }
+    .lede-copy {
+      font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+      line-height: 1.55;
+      color: var(--paper-mute);
+      max-width: 38ch;
+    }
+    .lede-copy strong { color: var(--paper); font-weight: 600; }
+    .lede-cta {
+      display: inline-flex; align-items: center; gap: 14px;
+      padding: 22px 28px;
+      background: var(--primary);
+      color: var(--ink);
+      font-family: var(--mono); font-weight: 700;
+      font-size: 0.9375rem; text-transform: uppercase;
+      letter-spacing: 0.18em;
+      text-decoration: none;
+      align-self: flex-start;
+      transition: transform 0.15s;
+      box-shadow: 8px 8px 0 var(--ink-2),
+                  8px 8px 0 1px var(--paper);
+    }
+    .lede-cta:hover {
+      transform: translate(-3px, -3px);
+      box-shadow: 11px 11px 0 var(--ink-2),
+                  11px 11px 0 1px var(--paper);
+    }
+
+    .lede-services {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: rgba(245, 240, 230, 0.08);
+      border: 1px solid rgba(245, 240, 230, 0.08);
+    }
+    .service-cell {
+      background: var(--ink);
+      padding: 18px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .service-cell .lbl {
+      font-family: var(--mono); font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.18em;
+      color: var(--paper-mute);
+    }
+    .service-cell .name {
+      font-family: var(--display); font-weight: 700;
+      font-size: 1.5rem; line-height: 1.05;
+    }
+    .service-cell .price {
+      font-family: var(--mono); font-size: 0.8125rem;
+      color: var(--primary);
+      margin-top: 4px;
+    }
+
+    /* Work tiles */
+    .tiles {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      grid-template-rows: auto auto;
+      gap: 12px;
+    }
+    .tile {
+      position: relative; overflow: hidden;
+      border: 1px solid rgba(245, 240, 230, 0.12);
+      background: linear-gradient(135deg, #1A1410, #0F0D0A);
+    }
+    .tile-1 {
+      grid-row: 1 / 3;
+      aspect-ratio: 9 / 16;
+      min-height: 460px;
+    }
+    .tile-2 { aspect-ratio: 1 / 1; }
+    .tile-3 { aspect-ratio: 1 / 1; }
+    .tile-fade {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 20%, rgba(255, 85, 0, 0.18), transparent 60%),
+                  linear-gradient(180deg, transparent 50%, rgba(10, 10, 10, 0.9) 100%);
+    }
+    .tile-meta {
+      position: absolute; left: 16px; top: 16px;
+      font-family: var(--mono); font-weight: 700; font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.2em;
+      color: var(--paper);
+      padding: 6px 12px;
+      background: rgba(10, 10, 10, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(245, 240, 230, 0.15);
+    }
+    .tile-meta.prime {
+      background: var(--primary); color: var(--ink);
+      border-color: var(--primary);
+    }
+    .tile-body {
+      position: absolute; left: 16px; right: 16px; bottom: 16px;
+    }
+    .tile-1 .tile-body {
+      font-family: var(--display); font-weight: 800;
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      line-height: 0.95; letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+    .tile-1 .tile-body em {
+      color: var(--primary); font-style: italic;
+    }
+    .tile-2 .tile-body, .tile-3 .tile-body {
+      font-family: var(--mono); font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.18em;
+      color: var(--paper-mute);
+    }
+    .tile-2 .tile-body strong, .tile-3 .tile-body strong {
+      color: var(--paper); font-weight: 700;
+      font-family: var(--display); font-size: 1.5rem;
+      letter-spacing: -0.02em;
+      display: block; margin-bottom: 4px;
+    }
+    .tile-play {
+      position: absolute; right: 16px; top: 16px;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--paper); color: var(--ink);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Footer rail */
+    .rail {
+      position: relative; z-index: 4;
+      margin-top: clamp(48px, 8vw, 96px);
+      padding: 24px max(20px, 4vw);
+      border-top: 1px solid rgba(245, 240, 230, 0.1);
+      display: flex; flex-wrap: wrap; gap: 16px 40px;
+      justify-content: space-between; align-items: center;
+      font-family: var(--mono); font-size: 0.75rem;
+      color: var(--paper-mute);
+      text-transform: uppercase; letter-spacing: 0.18em;
+    }
+    .rail strong { color: var(--paper); font-weight: 700; }
+    .rail-divider {
+      display: inline-block; width: 12px; height: 1px;
+      background: var(--paper-mute);
+      margin: 0 6px; vertical-align: middle;
+    }
+
+    /* Load reveals */
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(40px) skewY(2deg); }
+      to { opacity: 1; transform: translateY(0) skewY(0); }
+    }
+    [data-reveal] { opacity: 0; animation: slide-up 0.9s cubic-bezier(0.2, 0.85, 0.2, 1) forwards; }
+    [data-reveal-1] { animation-delay: 0.05s; }
+    [data-reveal-2] { animation-delay: 0.15s; }
+    [data-reveal-3] { animation-delay: 0.3s; }
+    [data-reveal-4] { animation-delay: 0.45s; }
+    [data-reveal-5] { animation-delay: 0.6s; }
+    [data-reveal-6] { animation-delay: 0.75s; }
+  </style>
+</head>
+<body>
+
+  <!-- Marquee top -->
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>NOW BOOKING — VIDEO AD PACK · £750</span>
+      <span>5-DAY TURNAROUND</span>
+      <span>UGC · PRODUCT · CAMPAIGN</span>
+      <span>BRIEF MONDAY · DELIVER FRIDAY</span>
+      <span>NOW BOOKING — VIDEO AD PACK · £750</span>
+      <span>5-DAY TURNAROUND</span>
+      <span>UGC · PRODUCT · CAMPAIGN</span>
+      <span>BRIEF MONDAY · DELIVER FRIDAY</span>
+    </div>
+  </div>
+
+  <nav>
+    <div class="logo-mark">AIREYAI / STUDIO</div>
+    <a href="#fit-call" class="nav-cta">Book a fit call →</a>
+  </nav>
+
+  <section class="hero">
+
+    <div class="status" data-reveal data-reveal-1>
+      <div class="status-dot">Studio status: open</div>
+      <div class="status-coords">2026 · Issue 01 · Vol. AAS</div>
+      <div class="status-issue"><strong>Recent work:</strong> Northwave Streetwear</div>
+    </div>
+
+    <h1 class="display" data-reveal data-reveal-2>
+      <div class="row">
+        <span class="word outline">Brands</span>
+        <span class="word fill">don't</span>
+        <span class="pill-inline">From £750 · Brief→Deliver in 5 days</span>
+      </div>
+      <div class="row">
+        <span class="word fill">need</span>
+        <span class="word fire">another</span>
+      </div>
+      <div class="row">
+        <span class="word fill">agency.</span>
+        <span class="word outline">They need</span>
+      </div>
+      <div class="row">
+        <span class="word fire">content.</span>
+      </div>
+    </h1>
+
+    <div class="grid-row">
+      <div class="lede">
+        <p class="lede-copy" data-reveal data-reveal-3>
+          <strong>AireyAI Studio</strong> produces the video ads, product imagery, UGC, and brand campaigns DTC founders are paying agencies £4k/month for — using AI we've tuned by hand, on a five-day turnaround, with no retainer.
+        </p>
+
+        <a href="#fit-call" class="lede-cta" data-reveal data-reveal-4>
+          Book the 15-min fit call
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="square"/>
+          </svg>
+        </a>
+
+        <div class="lede-services" data-reveal data-reveal-5>
+          <div class="service-cell">
+            <div class="lbl">01 / Video Ads</div>
+            <div class="name">Launch Pack</div>
+            <div class="price">£750 · 5d</div>
+          </div>
+          <div class="service-cell">
+            <div class="lbl">02 / Imagery</div>
+            <div class="name">Hero Shots</div>
+            <div class="price">From £400</div>
+          </div>
+          <div class="service-cell">
+            <div class="lbl">03 / UGC</div>
+            <div class="name">Persona Pack</div>
+            <div class="price">From £600</div>
+          </div>
+          <div class="service-cell">
+            <div class="lbl">04 / Brand</div>
+            <div class="name">Campaign</div>
+            <div class="price">From £1,500</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tiles" data-reveal data-reveal-6>
+        <article class="tile tile-1">
+          <div class="tile-fade"></div>
+          <div class="tile-meta prime">▶ Northwave · Ad 1</div>
+          <div class="tile-play">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div class="tile-body">
+            Built for<br />the <em>cold blocks.</em>
+          </div>
+        </article>
+
+        <article class="tile tile-2">
+          <div class="tile-fade"></div>
+          <div class="tile-meta">UGC</div>
+          <div class="tile-body">
+            <strong>Persona Pack</strong>
+            Face-locked. 3 clips.
+          </div>
+        </article>
+
+        <article class="tile tile-3">
+          <div class="tile-fade"></div>
+          <div class="tile-meta">Product</div>
+          <div class="tile-body">
+            <strong>Hero Shots</strong>
+            5 stills · 3 ratios.
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div class="rail">
+    <div><strong>AireyAI Studio</strong> <span class="rail-divider"></span> apcapital.ai@gmail.com</div>
+    <div>Est. 2026 <span class="rail-divider"></span> Built on AI · Tuned by hand</div>
+    <div>↑ Top</div>
+  </div>
+
+</body>
+</html>
