@@ -53,7 +53,7 @@
   /* === Typefaces === */
   --display: 'Big Shoulders Display', 'Impact', sans-serif;
   --sans: 'Inter Tight', system-ui, -apple-system, sans-serif;
-  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+  --mono: ui-monospace, 'SF Mono', 'Menlo', 'Consolas', monospace;
 
   /* === Motion === */
   --ease-out: cubic-bezier(0.2, 0.85, 0.2, 1);
